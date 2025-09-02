@@ -38,17 +38,18 @@ if st.button("Baixar MP3"):
             start_time = parse_time(start_input)
             end_time = parse_time(end_input)
 
-            ydl_opts = {
-                'format': 'bestaudio/best',
-                'outtmpl': os.path.join(downloads_folder, '%(title)s.%(ext)s'),
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': 'mp3',
-                    'preferredquality': '320',
-                }],
-                'restrictfilenames': True,
-                'noplaylist': True,  # apenas 1 vídeo
-            }
+          ydl_opts = {
+    'format': 'bestaudio/best',
+    'outtmpl': os.path.join(downloads_folder, '%(title)s.%(ext)s'),
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'mp3',
+        'preferredquality': '320',
+    }],
+    'restrictfilenames': True,
+    'noplaylist': True,
+}
+
 
             # Trim direto no download
             if start_time is not None or end_time is not None:
