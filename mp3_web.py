@@ -4,41 +4,34 @@ import re
 from yt_dlp import YoutubeDL
 from mutagen.mp3 import MP3
 from mutagen.id3 import ID3, TIT2, TPE1
-import imageio_ffmpeg as ffmpeg  # garante FFmpeg no ambiente
+import imageio_ffmpeg as ffmpeg
 
 # Pasta Downloads
 downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
 if not os.path.exists(downloads_folder):
     downloads_folder = os.path.join(os.path.expanduser("~"), "Transferências")
 
-st.title("YouTube MP3 Downloader 320 kbps")
+st.title("YouTube MP3 Downloader (320 kbps)")
+
+# Função para limpar o link
+def clean_youtube_url(url):
+    if "youtube.com/watch" in url:
+        # Pega apenas o vídeo: https://www.youtube.com/watch?v=ID
+        match = re.search(r"(https://www\.youtube\.com/watch\?v=[\w-]+)", url)
+        if match:
+            return match.group(1)
+    return url
 
 # URL
-url = st.text_input("Cole o link do YouTube (apenas vídeo, sem &list=):")
-
-# Trim inputs
-col1, col2 = st.columns(2)
-start_input = col1.text_input("Início (segundos ou mm:ss):", "")
-end_input = col2.text_input("Fim (segundos ou mm:ss):", "")
-
-def parse_time(t):
-    """Converte mm:ss ou ss em segundos"""
-    if not t:
-        return None
-    if ":" in t:
-        m, s = t.split(":")
-        return int(m)*60 + int(s)
-    return int(t)
+url_input = st.text_input("Cole o link do YouTube:")
+url = clean_youtube_url(url_input)
 
 if st.button("Baixar MP3"):
     if not url:
-        st.warning("⚠️ Insira o link do YouTube.")
+        st.warning("⚠️ Insira um link válido do YouTube.")
     else:
         st.info("⏳ Baixando e processando metadata...")
         try:
-            start_time = parse_time(start_input)
-            end_time = parse_time(end_input)
-
             ydl_opts = {
                 'format': 'bestaudio/best',
                 'outtmpl': os.path.join(downloads_folder, '%(title)s.%(ext)s'),
@@ -52,12 +45,6 @@ if st.button("Baixar MP3"):
                 'nocheckcertificate': True,
                 'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
             }
-
-            # Trim direto no download
-            if start_time is not None or end_time is not None:
-                ydl_opts['download_ranges'] = {
-                    'ranges': [{'start_time': start_time, 'end_time': end_time}]
-                }
 
             with YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=True)
@@ -96,7 +83,6 @@ if st.button("Baixar MP3"):
             new_filename = f"{safe_artist} - {safe_track}.mp3"
             new_path = os.path.join(downloads_folder, new_filename)
             os.rename(mp3_file, new_path)
-            mp3_file = new_path
 
             st.success(f"✅ Download concluído!\nArquivo salvo em: {downloads_folder}\nNome do arquivo: {new_filename}")
         except Exception as e:
