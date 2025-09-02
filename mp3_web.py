@@ -11,7 +11,7 @@ downloads_folder = os.path.join(os.path.expanduser("~"), "Downloads")
 if not os.path.exists(downloads_folder):
     downloads_folder = os.path.join(os.path.expanduser("~"), "Transferências")
 
-st.title("YouTube MP3 Downloader (320 kbps com Trim)")
+st.title("YouTube MP3 Downloader 320 kbps")
 
 # URL
 url = st.text_input("Cole o link do YouTube (apenas vídeo, sem &list=):")
