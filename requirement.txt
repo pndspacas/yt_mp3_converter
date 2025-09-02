@@ -1,4 +1,0 @@
-streamlit
-yt-dlp
-mutagen
-imageio-ffmpeg

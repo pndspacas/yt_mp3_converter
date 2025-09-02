@@ -14,7 +14,7 @@ if not os.path.exists(downloads_folder):
 st.title("YouTube MP3 Downloader (320 kbps com Trim)")
 
 # URL
-url = st.text_input("Cole o link do YouTube:")
+url = st.text_input("Cole o link do YouTube (apenas vídeo, sem &list=):")
 
 # Trim inputs
 col1, col2 = st.columns(2)
@@ -49,6 +49,8 @@ if st.button("Baixar MP3"):
                 }],
                 'restrictfilenames': True,
                 'noplaylist': True,
+                'nocheckcertificate': True,
+                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36',
             }
 
             # Trim direto no download
